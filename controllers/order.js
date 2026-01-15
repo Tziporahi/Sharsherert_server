@@ -1,6 +1,6 @@
 
 import { orderModel } from "../models/order.js";
-import userModel from '../models/user.js';
+import {userModel} from '../models/user.js';
 
 export const createNewOrder = async (req, res) => {
     try{
