@@ -9,3 +9,5 @@ router.get('/product', getAllItems);
 router.post('/product', createItem);
 router.put('/product/:id', updateItem);
 router.delete('/product/:id', deleteItem);
+
+export default router;

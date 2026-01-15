@@ -8,3 +8,5 @@ router.get('/orders', getAllOrders);
 router.post('/order', createNewOrder);
 router.delete('/order/:id', deleteOrder);
 router.put('/order/:id', updateStatus);
+
+export default router;
