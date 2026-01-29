@@ -93,7 +93,7 @@ export const updateItem = async (req, res) => {
 
 export const deleteItem = async (req, res) => {
     try {
-        const id = parseInt(req.params.id)
+        const id = req.params.id
 
         let d = await itemModel.findByIdAndDelete(id)
         if (!d)

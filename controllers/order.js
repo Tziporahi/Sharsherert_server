@@ -11,7 +11,7 @@ export const createNewOrder = async (req, res) => {
             let missing=[addressForShipping, customerId, products].filter(miss => !miss).join(", ");
             return res.status(400).json({ title: "missing data", message: `There is no ${missing}` })
         }
-        const isOk = await userModel.findOne({ customerId: customerId})
+        const isOk = await userModel.findOne({ _id: customerId})
         if (!isOk)
             return res.status(404).json({ title: "invalid user", message: "there is no user with such id" })
         const newOrder = new orderModel({ supplyDate, addressForShipping, customerId, products, isSent })
