@@ -24,7 +24,7 @@ export const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds)
         const newUser = new userModel({ firstName, lastName, email, password: hashedPassword })
         let user = await newUser.save()
-        return res.status(201).json({firstName: user.firstName, lastName: user.lastName})
+        return res.status(201).json({firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role})
     }
     catch (err) {
         return res.status(500).json({ title: "We have error with creating user", message: err })
@@ -68,9 +68,9 @@ export const updateUser = async (req, res) => {
     try {
         if (!req.body)
             return res.status(400).json({ title: "missing body", message: "no data" })
-        let { password,  email, firstName, lastName } = req.body;
-        if (!password || !email || !firstName || !lastName){
-            let missing=[password, email, firstName, lastName].filter(miss => !miss).join(", ")
+        let { password, email, firstName, lastName } = req.body;
+        if (!password || !email || !firstName){
+            let missing=[password, email, firstName].filter(miss => !miss).join(", ")
             return res.status(400).json({ title: "missing data", message: `There is no ${missing}` })
         }
         let user = await userModel.findOne({ email: email });
@@ -79,7 +79,11 @@ export const updateUser = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch)
             return res.status(401).json({ title: "wrong password", message: "password is incorrect" })
-        let updatedUser = await userModel.updateOne({ email: email }, { firstName, lastName });
+
+        const updateFields = { firstName };
+        if (lastName !== undefined) updateFields.lastName = lastName;
+
+        let updatedUser = await userModel.updateOne({ email: email }, updateFields);
         return res.status(200).json({ title: "updated user", message: `The user ${email} was updated` });
     }
     catch (err) {
@@ -100,7 +104,7 @@ export const deleteUser = async (req, res) => {
         let isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch || !user) 
             return res.status(401).json({ title: "wrong data", message: "password or user name is incorrect" })
-        let deletedUser = await userModel.updateOne({ email: email }, { status: "inactive" });
+        let deletedUser = await userModel.findOneAndDelete({ email: email });
         return res.status(200).json({ title: "deleted user", message: `The user ${email} was deleted` });
     }
     catch (err) {

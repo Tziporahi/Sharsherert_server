@@ -19,9 +19,9 @@ export const getAllItems = async (req, res) => {
 
 export const getItemById = async (req, res) => {
     try{
-        let SKU = parseInt(req.params.id);
-        if (!SKU)
-            return res.status(400).json({ title: "press item id", message: "" });
+        const SKU = parseInt(req.params.id);
+        if (Number.isNaN(SKU))
+            return res.status(400).json({ title: "press item id", message: "ID must be a number" });
         let item = await itemModel.findOne({SKU: SKU});
         if (!item)
             return res.status(404).json({ title: "Oops, you have a mistake", message: "there is no item with such id" });
@@ -37,17 +37,20 @@ export const createItem = async (req, res) => {
         if (!req.body)
             return res.status(400).json({ title: "missing body", message: "no data" })
         let {SKU, name, description, createDate, imageUrl, price, isAvailable, availableInSize}= req.body;
-        if (!SKU || !name || !price){
+        const parsedSKU = parseInt(SKU);
+        if (Number.isNaN(parsedSKU))
+            return res.status(400).json({ title: "invalid data", message: "SKU must be a number" });
+        if (!parsedSKU || !name || !price){
             let missing=[SKU, name, price].filter(miss => !miss).join(", ");
             return res.status(400).json({ title: "missing data", message: `There is no ${missing}` })
         }
         if (price <= 0)
             return res.status(400).json({ title: "invalid data", message: "price must be greater than 0" })
-        let isOk = await itemModel.findOne({ SKU: SKU })
+        let isOk = await itemModel.findOne({ SKU: parsedSKU })
         if (isOk)
             return res.status(409).json({ title: "duplicate item", message: "an item with the same SKU already exists" })
         
-        const newItem = new itemModel({ SKU, name, description, createDate, imageUrl, price, isAvailable, availableInSize })
+        const newItem = new itemModel({ SKU: parsedSKU, name, description, createDate, imageUrl, price, isAvailable, availableInSize })
         let item = await newItem.save()
         return res.status(201).json(item)
     }
@@ -63,6 +66,8 @@ export const updateItem = async (req, res) => {
         if (!req.params.id)
             return res.status(400).json({ title: "missing id", message: "no id" })
         const SKU = parseInt(req.params.id)
+        if (Number.isNaN(SKU))
+            return res.status(400).json({ title: "invalid id", message: "ID must be a number" });
         let { name, description, createDate, imageUrl, price, isAvailable, availableInSize } = req.body
 
         let updateObject = {}
@@ -94,8 +99,11 @@ export const updateItem = async (req, res) => {
 export const deleteItem = async (req, res) => {
     try {
         const id = req.params.id
+        const SKU = parseInt(id)
+        if (Number.isNaN(SKU))
+            return res.status(400).json({ title: "invalid id", message: "ID must be a number" })
 
-        let d = await itemModel.findByIdAndDelete(id)
+        let d = await itemModel.findOneAndDelete({SKU: SKU})
         if (!d)
             return res.status(404).json({ title: "error deleting", message: "Item not found" })
 

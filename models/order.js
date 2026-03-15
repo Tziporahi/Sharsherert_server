@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 import { availableInSize } from './item.js';
 
+const allowedSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+
 const minimalItemSchema = new mongoose.Schema({
     name: {type: String, required: true},
     price: {type: Number, required: true},
     isAvailable: {type: Boolean, default: true},
-    chooseSize: {type: String, validate: {
-            validator: function(v) {
-                return this.availableInSize.includes(v);
-            },
-            message: p => `${p.value} is not a valid size!`
-        }}
+    chooseSize: {
+        type: String,
+        enum: allowedSizes,
+        required: false
+    }
 });
 
 const orderSchema = new mongoose.Schema({

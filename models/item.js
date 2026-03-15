@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema({
-    SKU: {type: String, required: true, unique: true},
+    SKU: {type: Number, required: true, unique: true},
     name: {type: String, required: true},
     description: String,
     createDate: {type: Date, default: Date.now},

@@ -20,8 +20,20 @@ app.use('/api', itemRouter);
 app.use('/api', orderRouter);
 app.use('/api', userRouter);
 
-const port=process.env.PORT || 4400;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({ title: "Not Found", message: "Endpoint not found" });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json({ title: "Server Error", message: err.message || err });
+});
+
+const port = process.env.PORT || 4400;
+const host = process.env.HOST || '0.0.0.0';
+app.listen(port, host, () => {
+    console.log(`Server is running on ${host}:${port}`);
 })
 
