@@ -28,27 +28,26 @@
     <tbody>
       <tr><td>משתמשים</td><td>POST</td><td>/api/user</td><td>יצירת משתמש חדש</td><td>ציבורי</td></tr>
       <tr><td>משתמשים</td><td>POST</td><td>/api/login</td><td>התחברות</td><td>ציבורי</td></tr>
-      <tr><td>משתמשים</td><td>GET</td><td>/api/user</td><td>קבלת רשימת משתמשים</td><td>admin בלבד</td></tr>
-      <tr><td>משתמשים</td><td>POST</td><td>/api/updateuser</td><td>עדכון משתמש</td><td>משתמש מחובר</td></tr>
-      <tr><td>משתמשים</td><td>DELETE</td><td>/api/deleteuser</td><td>מחיקת משתמש</td><td>admin בלבד</td></tr>
+      <tr><td>משתמשים</td><td>GET</td><td>/api/user</td><td>קבלת רשימת משתמשים</td><td>ציבורי</td></tr>
+      <tr><td>משתמשים</td><td>POST</td><td>/api/updateuser</td><td>עדכון משתמש</td><td>ציבורי</td></tr>
+      <tr><td>משתמשים</td><td>DELETE</td><td>/api/deleteuser</td><td>מחיקת משתמש</td><td>ציבורי</td></tr>
       <tr><td>מוצרים</td><td>GET</td><td>/api/product</td><td>קבלת רשימת מוצרים</td><td>ציבורי</td></tr>
       <tr><td>מוצרים</td><td>GET</td><td>/api/byid/:id</td><td>קבלת מוצר לפי SKU</td><td>ציבורי</td></tr>
-      <tr><td>מוצרים</td><td>POST</td><td>/api/product</td><td>יצירת מוצר</td><td>admin בלבד</td></tr>
-      <tr><td>מוצרים</td><td>PUT</td><td>/api/product/:id</td><td>עדכון מוצר לפי SKU</td><td>admin בלבד</td></tr>
-      <tr><td>מוצרים</td><td>DELETE</td><td>/api/product/:id</td><td>מחיקת מוצר לפי SKU</td><td>admin בלבד</td></tr>
-      <tr><td>הזמנות</td><td>POST</td><td>/api/order</td><td>יצירת הזמנה</td><td>משתמש מחובר</td></tr>
-      <tr><td>הזמנות</td><td>GET</td><td>/api/orders</td><td>קבלת כל ההזמנות</td><td>admin בלבד</td></tr>
-      <tr><td>הזמנות</td><td>GET</td><td>/api/ordersbyid/:userId</td><td>קבלת הזמנות של משתמש</td><td>משתמש מחובר/admin</td></tr>
-      <tr><td>הזמנות</td><td>DELETE</td><td>/api/order</td><td>מחיקת הזמנה</td><td>משתמש מחובר/admin</td></tr>
-      <tr><td>הזמנות</td><td>PUT</td><td>/api/order</td><td>עדכון סטטוס משלוח</td><td>admin בלבד</td></tr>
+      <tr><td>מוצרים</td><td>POST</td><td>/api/product</td><td>יצירת מוצר</td><td>ציבורי</td></tr>
+      <tr><td>מוצרים</td><td>PUT</td><td>/api/product/:id</td><td>עדכון מוצר לפי SKU</td><td>ציבורי</td></tr>
+      <tr><td>מוצרים</td><td>DELETE</td><td>/api/product/:id</td><td>מחיקת מוצר לפי SKU</td><td>ציבורי</td></tr>
+      <tr><td>הזמנות</td><td>POST</td><td>/api/order</td><td>יצירת הזמנה</td><td>ציבורי</td></tr>
+      <tr><td>הזמנות</td><td>GET</td><td>/api/orders</td><td>קבלת כל ההזמנות</td><td>ציבורי</td></tr>
+      <tr><td>הזמנות</td><td>GET</td><td>/api/ordersbyid/:userId</td><td>קבלת הזמנות של משתמש</td><td>ציבורי</td></tr>
+      <tr><td>הזמנות</td><td>DELETE</td><td>/api/order</td><td>מחיקת הזמנה</td><td>ציבורי</td></tr>
+      <tr><td>הזמנות</td><td>PUT</td><td>/api/order</td><td>עדכון סטטוס משלוח</td><td>ציבורי</td></tr>
     </tbody>
   </table>
-  <ul>
+    <ul>
     <li>כל הנתיבים מתחילים ב-<b>/api</b> (לפי app.use('/api', ...)).</li>
-    <li>יש להוסיף Authorization header עם JWT בנתיבים שמוגנים (משתמש מחובר/מנהל).</li>
+    <li>כל הנתיבים פתוחים לציבור לבדיקת השרת (אין צורך ב-Authorization header).</li>
     <li>:id = מזהה מוצר (SKU), :userId = מזהה משתמש (ObjectId).</li>
-    <li>הרשאות admin נדרשות לפעולות ניהול (יצירה/עדכון/מחיקה של מוצרים, צפייה/עדכון/מחיקה של כל ההזמנות, צפייה בכל המשתמשים).</li>
-    <li>משתמש רגיל יכול לעדכן/למחוק רק את עצמו, ולראות רק את ההזמנות שלו.</li>
+    <li>בשעת בדיקות ניתן להחזיר את המידול של ההרשאות לפרודקשן על ידי שחזור מגרסה המאובטחת ב-Git.</li>
   </ul>
 </body>
 </html>
