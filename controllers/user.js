@@ -1,5 +1,6 @@
 import {userModel} from '../models/user.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const saltRounds = 10;
 
@@ -46,7 +47,19 @@ export const login= async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch)
             return res.status(401).json({ title: "wrong data", message: "We don't find such user, please try again" })
-        return res.status(200).json({firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role})
+        // יצירת JWT
+        const token = jwt.sign(
+          { id: user._id, email: user.email, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: '2h' }
+        );
+        return res.status(200).json({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          role: user.role,
+          token
+        })
     }
     catch(err){
         return res.status(500).json({ title: "Sorry, There is an error with login", message: err });
@@ -56,7 +69,13 @@ export const login= async (req, res) => {
 export const getAllUsers = async (req, res) => {
     try{
         let users = await userModel.find({});
-        users = users.map(u => ({firstName: u.firstName, lastName: u.lastName, email: u.email, role: u.role}));
+        users = users.map(u => ({
+            id: u._id,
+            firstName: u.firstName,
+            lastName: u.lastName,
+            email: u.email,
+            role: u.role
+        }));
         return res.status(200).json(users);
     }
     catch(err){
